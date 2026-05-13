@@ -1,0 +1,21 @@
+/* ProductForm.module.css */
+.mantine-Modal-overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* Adjust opacity as needed */
+  }
+  
+  .mantine-Modal-modal {
+    max-width: 600px; /* Adjust width as needed */
+    margin: 0 auto;
+  }
+  
+  /* Specific styles for form elements */
+  .mantine-TextInput-root {
+    margin-bottom: 1rem; /* Adjust spacing as needed */
+  }
+  
+  .mantine-Upload-dragAndDrop {
+    border: 1px dashed #ddd; /* Adjust border style and color */
+    padding: 1rem; /* Adjust padding as needed */
+    text-align: center;
+  }
+  

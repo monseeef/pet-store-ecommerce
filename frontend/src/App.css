@@ -1,0 +1,18 @@
+.active {
+  color: rgb(180 83 9);
+  font-weight: 700;
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+  animation-delay: -10s;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
