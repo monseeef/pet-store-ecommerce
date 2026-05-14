@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   deletePet,
   fetchPets,
 } from "../../services/reducer/petSlice";
 import PetModal from "./petModal";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { AlertTriangle, ArrowLeft, ArrowRight, Check, PawPrint, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import {
   TableBody,
   TableCell,
@@ -26,7 +24,7 @@ const PetComponent = () => {
   const totalPages = useSelector((state) => state.pets.totalPages);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit] = useState(10);
   // const [totalPages, setTotalPages] = useState();
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -126,7 +124,7 @@ const PetComponent = () => {
               onClick={handleAddPet}
               className="admin-button"
             >
-              <FontAwesomeIcon icon={faPlusSquare} /> Add Pet
+              <Plus className="h-4 w-4" /> Add Pet
             </button>
           </div>
           <div className="flex flex-col gap-5 p-5">
@@ -135,21 +133,7 @@ const PetComponent = () => {
                 <div className="flex justify-center items-center">
                   <div className="relative">
                     <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                      <svg
-                        className="w-4 h-4 text-secondary dark:text-primary"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                        />
-                      </svg>
+                      <Search className="h-4 w-4 text-amber-700" aria-hidden="true" />
                     </div>
                     <input
                       type="text"
@@ -218,22 +202,28 @@ const PetComponent = () => {
                 <TableBody>
                   {status === "loading" && (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-6">
-                        Loading pets...
+                      <TableCell colSpan={7}>
+                        <div className="admin-empty-state">Loading pets...</div>
                       </TableCell>
                     </TableRow>
                   )}
                   {status === "failed" && (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-6 text-red-500">
-                        {error || "Unable to load pets."}
+                      <TableCell colSpan={7}>
+                        <div className="admin-empty-state border-red-200 bg-red-50 text-red-700">
+                          <AlertTriangle className="mx-auto mb-3 h-8 w-8" />
+                          {error || "Unable to load pets."}
+                        </div>
                       </TableCell>
                     </TableRow>
                   )}
                   {status !== "loading" && status !== "failed" && filteredPets.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-6 text-gray-500">
-                        No pets found.
+                      <TableCell colSpan={7}>
+                        <div className="admin-empty-state">
+                          <PawPrint className="mx-auto mb-3 h-8 w-8 text-amber-600" />
+                          No pets found.
+                        </div>
                       </TableCell>
                     </TableRow>
                   )}
@@ -249,29 +239,13 @@ const PetComponent = () => {
                         className={`w-1/5 md:w-auto capitalize flex items-center justify-center`}
                       >
                         {pet.gender === "male" ? (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="2em"
-                            height="2em"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              fill="blue"
-                              d="M20 4v6h-2V7.425l-3.975 3.95q.475.7.725 1.488T15 14.5q0 2.3-1.6 3.9T9.5 20t-3.9-1.6T4 14.5t1.6-3.9T9.5 9q.825 0 1.625.237t1.475.738L16.575 6H14V4zM9.5 11q-1.45 0-2.475 1.025T6 14.5t1.025 2.475T9.5 18t2.475-1.025T13 14.5t-1.025-2.475T9.5 11"
-                            ></path>
-                          </svg>
+                          <span className="admin-badge bg-sky-50 text-sky-700">
+                            <PawPrint className="h-3.5 w-3.5" /> Male
+                          </span>
                         ) : (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="2em"
-                            height="2em"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              fill="#e600b4"
-                              d="M11 21v-2H9v-2h2v-2.1q-1.975-.35-3.238-1.888T6.5 9.45q0-2.275 1.613-3.862T12 4t3.888 1.588T17.5 9.45q0 2.025-1.263 3.563T13 14.9V17h2v2h-2v2zm1-8q1.45 0 2.475-1.025T15.5 9.5t-1.025-2.475T12 6T9.525 7.025T8.5 9.5t1.025 2.475T12 13"
-                            />
-                          </svg>
+                          <span className="admin-badge bg-pink-50 text-pink-700">
+                            <PawPrint className="h-3.5 w-3.5" /> Female
+                          </span>
                         )}
                       </TableCell>
                       <TableCell className="w-1/5 md:w-auto text-center">
@@ -283,41 +257,10 @@ const PetComponent = () => {
                             pet.isVaccinated ? "text-green-500" : "text-red-500"
                           }
                         >
-                          {pet.isVaccinated ? (
-                            <div className="flex justify-center items-center gap-2">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="2em"
-                                height="2em"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  fill="none"
-                                  stroke="green"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2.5"
-                                  d="M20 7L10 17l-5-5"
-                                />
-                              </svg>
-                            </div>
-                          ) : (
-                            <div className="flex justify-center items-center">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="2em"
-                                height="2em"
-                                viewBox="0 0 15 15"
-                              >
-                                <path
-                                  fill="red"
-                                  fillRule="evenodd"
-                                  d="M11.782 4.032a.575.575 0 1 0-.813-.814L7.5 6.687L4.032 3.218a.575.575 0 0 0-.814.814L6.687 7.5l-3.469 3.468a.575.575 0 0 0 .814.814L7.5 8.313l3.469 3.469a.575.575 0 0 0 .813-.814L8.313 7.5z"
-                                  clipRule="evenodd"
-                                ></path>
-                              </svg>{" "}
-                            </div>
-                          )}
+                          <span className={`admin-badge ${pet.isVaccinated ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"}`}>
+                            {pet.isVaccinated ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
+                            {pet.isVaccinated ? "Vaccinated" : "No"}
+                          </span>
                         </span>
                       </TableCell>
                       <TableCell className="w-1/5 md:w-auto text-center">
@@ -329,41 +272,10 @@ const PetComponent = () => {
                                 : "text-red-500"
                             }`}
                         >
-                          {pet.availability ? (
-                            <div className="flex justify-center items-center gap-2">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="2em"
-                                height="2em"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  fill="none"
-                                  stroke="green"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2.5"
-                                  d="M20 7L10 17l-5-5"
-                                />
-                              </svg>
-                            </div>
-                          ) : (
-                            <div className="flex justify-center items-center">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="2em"
-                                height="2em"
-                                viewBox="0 0 15 15"
-                              >
-                                <path
-                                  fill="red"
-                                  fillRule="evenodd"
-                                  d="M11.782 4.032a.575.575 0 1 0-.813-.814L7.5 6.687L4.032 3.218a.575.575 0 0 0-.814.814L6.687 7.5l-3.469 3.468a.575.575 0 0 0 .814.814L7.5 8.313l3.469 3.469a.575.575 0 0 0 .813-.814L8.313 7.5z"
-                                  clipRule="evenodd"
-                                ></path>
-                              </svg>
-                            </div>
-                          )}
+                          <span className={`admin-badge ${pet.availability ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+                            {pet.availability ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
+                            {pet.availability ? "Available" : "Reserved"}
+                          </span>
                         </span>
                       </TableCell>
                       <TableCell>
@@ -373,34 +285,14 @@ const PetComponent = () => {
                           aria-label={`Edit ${pet.name || "pet"}`}
                           onClick={() => handleEditPet(pet)}
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="1.5em"
-                            height="1.5em"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              fill="orange"
-                              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM21.41 6.34l-3.75-3.75l-2.53 2.54l3.75 3.75z"
-                            ></path>
-                          </svg>{" "}
+                          <Pencil className="h-4 w-4" />
                         </button>
                         <button
-                          className="admin-icon-button hover:border-red-200 hover:bg-red-50"
+                          className="admin-icon-button-danger"
                           aria-label={`Delete ${pet.name || "pet"}`}
                           onClick={() => handleDeletePet(pet._id)}
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="1.5em"
-                            height="1.5em"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              fill="red"
-                              d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"
-                            ></path>
-                          </svg>
+                          <Trash2 className="h-4 w-4" />
                         </button>
                         </div>
                       </TableCell>
@@ -418,21 +310,7 @@ const PetComponent = () => {
                     className="admin-button-secondary"
                     disabled={currentPage === 1}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                      className="w-4 h-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-                      ></path>
-                    </svg>
+                    <ArrowLeft className="h-4 w-4" />
                     Previous
                   </button>
                 </li>
@@ -441,10 +319,10 @@ const PetComponent = () => {
                     <li key={page + 1}>
                       <button
                         onClick={() => handlePagination(page + 1)}
-                        className={`relative block rounded-md px-3 py-1.5 text-sm transition-all duration-300 ${
+                        className={`admin-pagination-button ${
                           currentPage === page + 1
-                            ? "bg-primary hover:bg-secondary text-white"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            ? "admin-pagination-button-active"
+                            : ""
                         }`}
                       >
                         {page + 1}
@@ -459,21 +337,7 @@ const PetComponent = () => {
                     disabled={currentPage === totalPages}
                   >
                     Next
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="2"
-                      stroke="currentColor"
-                      aria-hidden="true"
-                      className="w-4 h-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                      ></path>
-                    </svg>
+                    <ArrowRight className="h-4 w-4" />
                   </button>
                 </li>
               </ul>

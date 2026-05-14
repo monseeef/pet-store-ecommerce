@@ -20,7 +20,7 @@ const ForgotPassword = () => {
           <a href="/">
             <img
               src="public/Logo.png"
-              alt="Pet Store Logo"
+              alt="Petopia"
               className="h-12 mr-2 mb-6 "
             />
           </a>

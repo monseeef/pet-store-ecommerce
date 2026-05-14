@@ -11,8 +11,7 @@ import {
 import ProductForm from "./ProductForm";
 import ProductEditForm from "./EditForm";
 import ProductView from "./ProductView";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { AlertTriangle, ArrowLeft, ArrowRight, Eye, PackageOpen, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import PetCategory from "./PetCategory";
 import api from "../../services/api";
 // import { selectCategories } from "../../services/reducer/petCategorySlice";
@@ -42,10 +41,10 @@ const ProductList = () => {
   const [editProductId, setEditProductId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage, setProductsPerPage] = useState(5); // Fixed products per page
+  const [productsPerPage] = useState(5); // Fixed products per page
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
-  const [filters, setFilters] = useState({});
+  const [filters] = useState({});
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteUserId, setDeleteUserId] = useState(null);
   const [isViewFormOpen, setIsViewFormOpen] = useState(false);
@@ -85,7 +84,7 @@ const ProductList = () => {
         })
       );
     }
-  }, [dispatch, currentPage, searchQuery, selectedCategory]);
+  }, [dispatch, currentPage, productsPerPage, searchQuery, selectedCategory]);
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId);
@@ -107,7 +106,6 @@ const ProductList = () => {
     }
   };
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const goToPreviousPage = () => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
@@ -196,7 +194,8 @@ const ProductList = () => {
           search: searchQuery,
         })
       );
-    } catch (error) {
+    } catch {
+      // Keep the existing list visible and let protected API errors fail quietly here.
     }
   };
 
@@ -223,12 +222,28 @@ const ProductList = () => {
           search: searchQuery,
         })
       );
-    } catch (error) {
+    } catch {
+      // Product creation errors are surfaced by the form layer where possible.
     }
   };
 
-  if (isLoading) return <div className="admin-page text-sm text-slate-500">Loading products...</div>;
-  if (isError) return <div className="admin-page text-sm text-red-600">Error: {isError}</div>;
+  if (isLoading) {
+    return (
+      <div className="admin-page">
+        <div className="admin-empty-state">Loading products...</div>
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="admin-page">
+        <div className="admin-empty-state border-red-200 bg-red-50 text-red-700">
+          <AlertTriangle className="mx-auto mb-3 h-8 w-8" />
+          Error: {isError}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -243,7 +258,7 @@ const ProductList = () => {
                 className="admin-button"
                 onClick={handleOpenProductForm}
               >
-                <FontAwesomeIcon icon={faPlusSquare} /> Add Product
+                <Plus className="h-4 w-4" /> Add Product
               </button>
             </div>
             <div className="flex flex-col gap-6 p-5">
@@ -251,21 +266,7 @@ const ProductList = () => {
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                   <div className="relative">
                     <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                      <svg
-                        className="w-4 h-4 text-primary dark:text-primary"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                        />
-                      </svg>
+                      <Search className="h-4 w-4 text-amber-700" aria-hidden="true" />
                     </div>
                     <input
                       value={searchQuery}
@@ -336,8 +337,11 @@ const ProductList = () => {
                   <tbody>
                     {filteredProducts.length === 0 && (
                       <tr>
-                        <td colSpan={6} className="text-center text-slate-500">
-                          No products found.
+                        <td colSpan={6}>
+                          <div className="admin-empty-state">
+                            <PackageOpen className="mx-auto mb-3 h-8 w-8 text-amber-600" />
+                            No products found.
+                          </div>
                         </td>
                       </tr>
                     )}
@@ -367,57 +371,21 @@ const ProductList = () => {
                             aria-label={`View ${product.name || "product"}`}
                             onClick={() => handleOpenViewForm(product._id)}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="1.5em"
-                              height="1.5em"
-                              viewBox="0 0 32 32"
-                            >
-                              <circle
-                                cx={16}
-                                cy={16}
-                                r={4}
-                                fill="blue"
-                              ></circle>
-                              <path
-                                fill="blue"
-                                d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68M16 22.5a6.5 6.5 0 1 1 6.5-6.5a6.51 6.51 0 0 1-6.5 6.5"
-                              ></path>
-                            </svg>{" "}
+                            <Eye className="h-4 w-4" />
                           </button>
                           <button
                             className="admin-icon-button"
                             aria-label={`Edit ${product.name || "product"}`}
                             onClick={() => handleOpenEditForm(product._id)}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="1.5em"
-                              height="1.5em"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                fill="orange"
-                                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM21.41 6.34l-3.75-3.75l-2.53 2.54l3.75 3.75z"
-                              ></path>
-                            </svg>{" "}
+                            <Pencil className="h-4 w-4" />
                           </button>
                           <button
-                            className="admin-icon-button hover:border-red-200 hover:bg-red-50"
+                            className="admin-icon-button-danger"
                             aria-label={`Delete ${product.name || "product"}`}
                             onClick={() => handleDeleteClick(product._id)}
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="1.5em"
-                              height="1.5em"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                fill="red"
-                                d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"
-                              ></path>
-                            </svg>
+                            <Trash2 className="h-4 w-4" />
                           </button>
                           </div>
                         </td>
@@ -437,21 +405,7 @@ const ProductList = () => {
                   disabled={currentPage === 1}
                   className="admin-button-secondary"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                    className="w-4 h-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-                    ></path>
-                  </svg>
+                  <ArrowLeft className="h-4 w-4" />
                   Previous
                 </button>
                 <div className="flex items-center gap-2">
@@ -459,10 +413,10 @@ const ProductList = () => {
                 {[...Array(totalPages)].map((_, index) => (
                   <button
                     key={index}
-                    className={`relative block rounded-md px-3 py-1.5 text-sm transition-all duration-300 ${
+                    className={`admin-pagination-button ${
                       currentPage === index + 1
-                        ? "bg-primary text-white"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        ? "admin-pagination-button-active"
+                        : ""
                     }`}
                     onClick={() => setCurrentPage(index + 1)}
                   >
@@ -475,21 +429,7 @@ const ProductList = () => {
                   className="admin-button-secondary"
                 >
                   Next
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                    className="w-4 h-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                    ></path>
-                  </svg>
+                  <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
             </div>

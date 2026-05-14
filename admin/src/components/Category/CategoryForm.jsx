@@ -1,5 +1,5 @@
 // CategoryForm.js
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { createCategories, updateCategories } from "../../services/reducer/categorySlice";
 
@@ -40,17 +40,17 @@ const CategoryForm = ({ isOpen, onClose, mode, categoryData, onSubmit }) => {
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 overflow-y-auto">
-          <div className="max-w-sm bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-xl text-gray-800 mb-3">
+        <div className="admin-modal-backdrop">
+          <div className="admin-modal max-w-sm">
+            <h2 className="text-xl font-black text-slate-950">
               {mode === "add" ? "Add Category" : "Edit Category"}
             </h2>
-            <p className="text-sm text-gray-600">
+            <p className="mt-2 text-sm text-slate-500">
               {mode === "add" ? "Create a new category by filling out the form below." : "Edit the category details below."}
             </p>
             <form onSubmit={handleSubmit}>
               <div className="mt-4">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="mb-2 block text-sm font-bold text-slate-700">
                   Name
                 </label>
                 <input
@@ -59,14 +59,11 @@ const CategoryForm = ({ isOpen, onClose, mode, categoryData, onSubmit }) => {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="block py-2.5 px-0 w-full text-sm bg-transparent
-                  border-0 border-b-[1px] border-gray-400 appearance-none dark:text-white
-                   dark:border-gray-400 dark:focus:border-primary focus:outline-none 
-                   focus:ring-0 focus:border-secondary peer"
+                  className="admin-input w-full"
                 />
               </div>
               <div className="mt-4">
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="description" className="mb-2 block text-sm font-bold text-slate-700">
                   Description
                 </label>
                 <textarea
@@ -74,23 +71,20 @@ const CategoryForm = ({ isOpen, onClose, mode, categoryData, onSubmit }) => {
                   name="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="block py-2.5 px-0 w-full text-sm bg-transparent
-                  border-0 border-b-[1px] border-gray-400 appearance-none dark:text-white
-                   dark:border-gray-400 dark:focus:border-primary focus:outline-none 
-                   focus:ring-0 focus:border-secondary peer"
+                  className="admin-input min-h-28 w-full py-3"
                 ></textarea>
               </div>
-              <div className="mt-4 flex justify-end">
+              <div className="mt-5 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="mr-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary"
+                  className="admin-button-secondary"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                  className="admin-button"
                 >
                   {mode === "add" ? "Add Category" : "Save Changes"}
                 </button>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "@/services/reducer/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { ShieldCheck } from "lucide-react";
+import { PawPrint, ShieldCheck } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,9 +30,11 @@ const Login = () => {
       <div className="grid w-full max-w-5xl overflow-hidden rounded-[2rem] border border-amber-100 bg-white shadow-xl shadow-amber-950/10 lg:grid-cols-[0.95fr_1.05fr]">
         <div className="hidden bg-amber-50 p-10 lg:flex lg:flex-col lg:justify-between">
           <Link className="flex items-center gap-3" to="/">
-            <img className="h-12 w-auto" src="/logoo.png" alt="Meowtopia" />
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-900/20">
+              <PawPrint className="h-6 w-6" />
+            </span>
             <div>
-              <p className="text-lg font-black text-slate-950">Meowtopia</p>
+              <p className="text-lg font-black text-slate-950">Petopia</p>
               <p className="text-sm font-semibold text-slate-500">Premium pet care</p>
             </div>
           </Link>
@@ -51,8 +53,10 @@ const Login = () => {
         <div className="p-6 sm:p-10">
           <div className="mb-8 text-center lg:text-left">
             <Link className="mb-6 inline-flex items-center gap-3 lg:hidden" to="/">
-              <img className="h-11 w-auto" src="/logoo.png" alt="Meowtopia" />
-              <span className="text-lg font-black text-slate-950">Meowtopia</span>
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-900/20">
+                <PawPrint className="h-5 w-5" />
+              </span>
+              <span className="text-lg font-black text-slate-950">Petopia</span>
             </Link>
             <p className="pet-eyebrow">Account login</p>
             <h2 className="mt-2 text-3xl font-black text-slate-950">Sign in</h2>

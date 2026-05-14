@@ -3,6 +3,8 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const Category = require("../models/category");
+const Pet = require("../models/Pet");
+const PetCategory = require("../models/PetCategory");
 const Product = require("../models/Product");
 const User = require("../models/User");
 
@@ -62,6 +64,13 @@ const upsertCategory = (name, description) =>
     { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
   );
 
+const upsertPetCategory = (name, description) =>
+  PetCategory.findOneAndUpdate(
+    { name },
+    { $set: { name, description } },
+    { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
+  );
+
 const slugify = (value) =>
   value
     .toLowerCase()
@@ -86,6 +95,26 @@ const upsertProduct = ({ name, price, description, category, stock, image }) =>
     { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
   );
 
+const upsertPet = ({ name, age, gender, isVaccinated, location, description, availability, CategoryName, image, userId }) =>
+  Pet.findOneAndUpdate(
+    { name, location },
+    {
+      $set: {
+        name,
+        age,
+        gender,
+        isVaccinated,
+        location,
+        description,
+        availability,
+        CategoryName,
+        image,
+        userId,
+      },
+    },
+    { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true }
+  );
+
 const seed = async () => {
   ensureRequiredEnv();
   await connect();
@@ -104,48 +133,102 @@ const seed = async () => {
     isAdmin: false,
   });
 
-  const food = await upsertCategory("Development Food", "Development-only seed category for pet food.");
-  const toys = await upsertCategory("Development Toys", "Development-only seed category for pet toys.");
-  const care = await upsertCategory("Development Care", "Development-only seed category for pet care.");
+  const food = await upsertCategory("Food & Treats", "Premium daily nutrition and reward treats for pets.");
+  const toys = await upsertCategory("Toys & Enrichment", "Playful toys, chews, and enrichment essentials.");
+  const care = await upsertCategory("Grooming & Care", "Gentle grooming and everyday wellness products.");
+  const cats = await upsertPetCategory("Cats", "Adoptable cats and kittens.");
+  const dogs = await upsertPetCategory("Dogs", "Adoptable dogs and puppies.");
 
   const products = await Promise.all([
     upsertProduct({
-      name: "Dev Premium Puppy Kibble",
+      name: "Petopia Puppy Growth Kibble",
       price: 24.99,
-      description: "Development seed product: balanced dry food for growing puppies.",
+      description: "Balanced dry food made for growing puppies and everyday healthy routines.",
       category: food,
       stock: 18,
       image: "/product-placeholder.svg",
     }),
     upsertProduct({
-      name: "Dev Salmon Cat Treats",
+      name: "Salmon Crunch Cat Treats",
       price: 8.49,
-      description: "Development seed product: crunchy salmon treats for cats.",
+      description: "Crunchy salmon rewards for cats who appreciate a little ceremony.",
       category: food,
       stock: 30,
       image: "/product-placeholder.svg",
     }),
     upsertProduct({
-      name: "Dev Rope Tug Toy",
+      name: "Braided Rope Tug Toy",
       price: 11.99,
-      description: "Development seed product: durable rope toy for daily play.",
+      description: "Durable rope toy for daily tug, fetch, and supervised play sessions.",
       category: toys,
       stock: 14,
       image: "/product-placeholder.svg",
     }),
     upsertProduct({
-      name: "Dev Gentle Pet Shampoo",
+      name: "Gentle Oat Pet Shampoo",
       price: 13.75,
-      description: "Development seed product: gentle shampoo for dogs and cats.",
+      description: "Soft oat-based shampoo for dogs and cats with sensitive coats.",
       category: care,
       stock: 20,
       image: "/product-placeholder.svg",
     }),
   ]);
 
+  const seededPets = await Promise.all([
+    upsertPet({
+      name: "Milo",
+      age: 2,
+      gender: "male",
+      isVaccinated: true,
+      location: "Casablanca",
+      description: "A playful tabby who loves sunny windows, feather toys, and patient introductions.",
+      availability: true,
+      CategoryName: cats.name,
+      image: "/product-placeholder.svg",
+      userId: customer._id,
+    }),
+    upsertPet({
+      name: "Luna",
+      age: 1,
+      gender: "female",
+      isVaccinated: true,
+      location: "Rabat",
+      description: "A gentle young cat with a calm personality and a soft spot for cozy blankets.",
+      availability: true,
+      CategoryName: cats.name,
+      image: "/product-placeholder.svg",
+      userId: customer._id,
+    }),
+    upsertPet({
+      name: "Rocky",
+      age: 3,
+      gender: "male",
+      isVaccinated: true,
+      location: "Marrakech",
+      description: "A cheerful dog who enjoys long walks, treat puzzles, and friendly people.",
+      availability: true,
+      CategoryName: dogs.name,
+      image: "/product-placeholder.svg",
+      userId: customer._id,
+    }),
+    upsertPet({
+      name: "Nala",
+      age: 4,
+      gender: "female",
+      isVaccinated: false,
+      location: "Tangier",
+      description: "A sweet companion with a quiet temperament, best suited for a relaxed home.",
+      availability: false,
+      CategoryName: dogs.name,
+      image: "/product-placeholder.svg",
+      userId: customer._id,
+    }),
+  ]);
+
   console.log(`Seeded admin: ${admin.email} role=admin`);
   console.log(`Seeded user: ${customer.email} role=customer`);
   console.log(`Seeded in-stock products: ${products.length}`);
+  console.log(`Seeded adoptable pets: ${seededPets.length}`);
 };
 
 seed()

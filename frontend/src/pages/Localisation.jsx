@@ -48,7 +48,7 @@ export default function Component() {
             <div className="flex items-start gap-2">
               <MailIcon className="text-gray-500 dark:text-gray-400 mt-1" />
               <div>
-                <p>meowtopia@gmail.com</p>
+                <p>hello@petopia.local</p>
               </div>
             </div>
           </div>

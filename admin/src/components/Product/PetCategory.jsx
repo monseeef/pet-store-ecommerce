@@ -82,7 +82,7 @@
 // };
 
 // export default PetCategory;
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCategories,
@@ -111,7 +111,7 @@ const PetCategory = ({ onChange }) => {
         id="category"
         value={selectedCategory}
         onChange={(e) => handleCategoryChange(e.target.value)}
-        className="block w-full p-1 text-gray-900 border-none border-gray-300 rounded-lg bg-gray-50"
+        className="admin-select min-w-48"
       >
         <option value="">All Categories</option>
         {Array.isArray(category) &&

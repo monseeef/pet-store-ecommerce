@@ -59,7 +59,7 @@ const Login = () => {
         <div className="p-6 sm:p-10">
           <div className="mb-8">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-600">
-              PetCo Admin
+              Petopia Admin
             </p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950">
               Welcome back

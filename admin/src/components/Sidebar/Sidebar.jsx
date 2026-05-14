@@ -2,28 +2,28 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  IoBagHandleOutline,
-  IoBarChartOutline,
-  IoCartOutline,
-  IoGridOutline,
-  IoLogOutOutline,
-  IoMenuOutline,
-  IoPawOutline,
-  IoPeopleOutline,
-  IoPersonCircleOutline,
-  IoPricetagsOutline,
-  IoSettingsOutline,
-  IoCloseOutline,
-} from "react-icons/io5";
+  Grid2X2,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Package,
+  PawPrint,
+  Settings,
+  ShoppingCart,
+  Tags,
+  UserCircle,
+  Users,
+  X,
+} from "lucide-react";
 import { logout } from "../../services/reducer/authSlice";
 
 const navItems = [
-  { to: "/dashboard", label: "Dashboard", icon: IoBarChartOutline },
-  { to: "/products", label: "Products", icon: IoBagHandleOutline },
-  { to: "/orders", label: "Orders", icon: IoCartOutline },
-  { to: "/pets", label: "Pets", icon: IoPawOutline },
-  { to: "/users", label: "Users", icon: IoPeopleOutline },
-  { to: "/categories", label: "Categories", icon: IoPricetagsOutline },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/products", label: "Products", icon: Package },
+  { to: "/orders", label: "Orders", icon: ShoppingCart },
+  { to: "/pets", label: "Pets", icon: PawPrint },
+  { to: "/users", label: "Users", icon: Users },
+  { to: "/categories", label: "Categories", icon: Tags },
 ];
 
 const Sidebar = () => {
@@ -40,26 +40,26 @@ const Sidebar = () => {
   };
 
   const navClass = ({ isActive }) =>
-    `flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition ${
+    `group relative flex items-center gap-3 overflow-hidden rounded-xl px-3 py-3 text-sm font-bold transition duration-200 ${
       isActive
-        ? "bg-amber-100 text-slate-950 shadow-sm"
-        : "text-slate-500 hover:bg-white hover:text-slate-950"
+        ? "bg-slate-950 text-white shadow-lg shadow-slate-950/10"
+        : "text-slate-500 hover:-translate-y-0.5 hover:bg-white hover:text-slate-950 hover:shadow-sm"
     }`;
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur sm:ml-64 sm:px-6">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-amber-100/80 bg-white/85 px-4 shadow-sm shadow-amber-950/5 backdrop-blur-xl sm:ml-64 sm:px-6">
         <button
           type="button"
           aria-label="Open navigation"
           onClick={() => setIsMobileOpen(true)}
           className="admin-icon-button sm:hidden"
         >
-          <IoMenuOutline className="h-5 w-5" />
+            <Menu className="h-5 w-5" />
         </button>
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-600">
-            Pet Store Admin
+            Petopia Admin
           </p>
           <p className="text-sm text-slate-500">Operations dashboard</p>
         </div>
@@ -67,23 +67,23 @@ const Sidebar = () => {
           <button
             type="button"
             onClick={() => setIsUserMenuOpen((value) => !value)}
-            className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-300"
+            className="inline-flex items-center gap-2 rounded-full border border-amber-100 bg-white px-2 py-1.5 text-sm font-semibold text-slate-700 shadow-sm shadow-amber-950/5 transition hover:-translate-y-0.5 hover:bg-amber-50 focus:outline-none focus:ring-4 focus:ring-amber-100"
             aria-expanded={isUserMenuOpen}
             aria-label="Open account menu"
           >
-            <IoPersonCircleOutline className="h-7 w-7 text-slate-500" />
+            <UserCircle className="h-7 w-7 text-slate-500" />
             <span className="hidden max-w-32 truncate sm:inline">
               {user?.username || "Admin"}
             </span>
           </button>
           {isUserMenuOpen && (
-            <div className="absolute right-0 mt-2 w-52 rounded-lg border border-slate-200 bg-white p-2 shadow-lg">
+            <div className="absolute right-0 mt-2 w-52 rounded-2xl border border-amber-100 bg-white p-2 shadow-xl shadow-slate-950/10">
               <NavLink
                 to="/profile"
                 className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-slate-600 hover:bg-amber-50 hover:text-slate-950"
                 onClick={() => setIsUserMenuOpen(false)}
               >
-                <IoSettingsOutline className="h-4 w-4" />
+                <Settings className="h-4 w-4" />
                 Profile
               </NavLink>
               <button
@@ -91,7 +91,7 @@ const Sidebar = () => {
                 onClick={handleLogout}
                 className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50"
               >
-                <IoLogOutOutline className="h-4 w-4" />
+                <LogOut className="h-4 w-4" />
                 Logout
               </button>
             </div>
@@ -109,7 +109,7 @@ const Sidebar = () => {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-[#fbfaf7] px-4 py-5 shadow-xl transition-transform sm:translate-x-0 sm:shadow-none ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-amber-100/80 bg-[#fbfaf7] px-4 py-5 shadow-xl shadow-slate-950/10 transition-transform sm:translate-x-0 sm:shadow-none ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         aria-label="Admin navigation"
@@ -120,11 +120,11 @@ const Sidebar = () => {
             className="flex items-center gap-3"
             onClick={() => setIsMobileOpen(false)}
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-950 text-amber-300">
-              <IoGridOutline className="h-5 w-5" />
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-950 to-slate-800 text-amber-300 shadow-lg shadow-slate-950/10">
+              <Grid2X2 className="h-5 w-5" />
             </span>
             <span>
-              <span className="block text-sm font-bold text-slate-950">PetCo Admin</span>
+              <span className="block text-sm font-bold text-slate-950">Petopia Admin</span>
               <span className="block text-xs text-slate-500">Commerce control</span>
             </span>
           </NavLink>
@@ -134,7 +134,7 @@ const Sidebar = () => {
             onClick={() => setIsMobileOpen(false)}
             className="admin-icon-button sm:hidden"
           >
-            <IoCloseOutline className="h-5 w-5" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
@@ -146,7 +146,8 @@ const Sidebar = () => {
               className={navClass}
               onClick={() => setIsMobileOpen(false)}
             >
-              <Icon className="h-5 w-5" />
+              <span className="absolute inset-y-2 left-0 w-1 rounded-full bg-amber-300 opacity-0 transition group-[.active]:opacity-100" />
+              <Icon className="h-5 w-5 transition group-hover:scale-110" />
               {label}
             </NavLink>
           ))}
@@ -157,7 +158,7 @@ const Sidebar = () => {
           onClick={handleLogout}
           className="mt-6 flex items-center gap-3 rounded-md border border-red-100 bg-red-50 px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-200"
         >
-          <IoLogOutOutline className="h-5 w-5" />
+          <LogOut className="h-5 w-5" />
           Logout
         </button>
       </aside>

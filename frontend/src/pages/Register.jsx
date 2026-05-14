@@ -3,7 +3,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link, useNavigate } from "react-router-dom";
 import api, { getApiError } from "@/services/api";
-import { ShieldCheck, Truck } from "lucide-react";
+import { PawPrint, ShieldCheck, Truck } from "lucide-react";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -51,9 +51,11 @@ const Register = () => {
         <div className="flex items-center justify-center p-6 sm:p-10">
           <div className="w-full max-w-md">
             <Link className="mb-8 inline-flex items-center gap-3" to="/">
-              <img className="h-12 w-auto" src="/logoo.png" alt="Meowtopia" />
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-900/20">
+                <PawPrint className="h-6 w-6" />
+              </span>
               <div>
-                <p className="text-lg font-black text-slate-950">Meowtopia</p>
+                <p className="text-lg font-black text-slate-950">Petopia</p>
                 <p className="text-sm font-semibold text-slate-500">Premium pet care</p>
               </div>
             </Link>

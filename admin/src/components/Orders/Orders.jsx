@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { AlertTriangle, ArrowLeft, ArrowRight, ClipboardList, Eye, Save, Search, Trash2 } from "lucide-react";
 import api from "../../services/api";
 import {
   Table,
@@ -148,25 +149,11 @@ const Orders = () => {
               </div>
               <div className="relative">
                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                  <svg
-                    className="w-4 h-4 text-secondary dark:text-primary"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
-                  </svg>
+                  <Search className="h-4 w-4 text-amber-700" aria-hidden="true" />
                 </div>
                 <input
                   type="text"
-                  className="text-sm bg-opacity-0 block ps-10 p-2.5 bg-transparent border-0 border-b-[1px] border-gray-300 appearance-none dark:text-gray-500 focus:outline-none focus:ring-0 focus:border-primary peer"
+                  className="admin-input w-full ps-10 sm:w-72"
                   placeholder="Search..."
                   value={searchTerm}
                   onChange={handleSearch}
@@ -176,7 +163,8 @@ const Orders = () => {
           </div>
 
           {error && (
-            <div className="mb-4 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div className="mb-4 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+              <AlertTriangle className="h-4 w-4" />
               {error}
             </div>
           )}
@@ -199,15 +187,18 @@ const Orders = () => {
               <TableBody>
                 {isLoading && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-6">
-                      Loading orders...
+                    <TableCell colSpan={6}>
+                      <div className="admin-empty-state">Loading orders...</div>
                     </TableCell>
                   </TableRow>
                 )}
                 {!isLoading && orders.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-6 text-gray-500">
-                      No orders found.
+                    <TableCell colSpan={6}>
+                      <div className="admin-empty-state">
+                        <ClipboardList className="mx-auto mb-3 h-8 w-8 text-amber-600" />
+                        No orders found.
+                      </div>
                     </TableCell>
                   </TableRow>
                 )}
@@ -251,17 +242,7 @@ const Orders = () => {
                         </select>
 
                         <button aria-label={`Save status for order ${order.orderId || order._id}`} className="admin-icon-button ml-2" onClick={() => updateOrderStatus(order._id)}>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="2em"
-                            height="2em"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              fill="#787878"
-                              d="M20 7.423v10.962q0 .69-.462 1.153T18.384 20H5.616q-.691 0-1.153-.462T4 18.384V5.616q0-.691.463-1.153T5.616 4h10.961zm-8.004 9.115q.831 0 1.417-.582T14 14.543t-.582-1.418t-1.413-.586t-1.419.581T10 14.535t.582 1.418t1.414.587M6.769 9.77h7.423v-3H6.77z"
-                            ></path>
-                          </svg>{" "}
+                          <Save className="h-4 w-4" />
                         </button>
                       </div>
                     </TableCell>
@@ -273,35 +254,14 @@ const Orders = () => {
                         className="admin-icon-button"
                         aria-label={`View order ${order.orderId || order._id}`}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="1.5em"
-                          height="1.5em"
-                          viewBox="0 0 32 32"
-                        >
-                          <circle cx={16} cy={16} r={4} fill="blue"></circle>
-                          <path
-                            fill="blue"
-                            d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68M16 22.5a6.5 6.5 0 1 1 6.5-6.5a6.51 6.51 0 0 1-6.5 6.5"
-                          ></path>
-                        </svg>{" "}
+                        <Eye className="h-4 w-4" />
                       </Link>
                       <button
                         onClick={() => handleDelete(order._id)}
-                        className="admin-icon-button hover:border-red-200 hover:bg-red-50"
+                        className="admin-icon-button-danger"
                         aria-label={`Delete order ${order.orderId || order._id}`}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="1.5em"
-                          height="1.5em"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            fill="red"
-                            d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"
-                          ></path>
-                        </svg>
+                        <Trash2 className="h-4 w-4" />
                       </button>
                       </div>
                     </TableCell>
@@ -334,31 +294,17 @@ const Orders = () => {
               disabled={currentPage === 1}
               className="admin-button-secondary"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-                stroke="currentColor"
-                aria-hidden="true"
-                className="w-4 h-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-                ></path>
-              </svg>
+              <ArrowLeft className="h-4 w-4" />
               Previous
             </button>
             <div className="flex items-center gap-2">
               {[...Array(totalPages)].map((_, index) => (
                 <button
                   key={index}
-                  className={`relative block rounded-md px-3 py-1.5 text-sm transition-all duration-300 ${
+                  className={`admin-pagination-button ${
                     currentPage === index + 1
-                      ? "bg-primary text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      ? "admin-pagination-button-active"
+                      : ""
                   }`}
                   onClick={() => handlePageChange(index + 1)}
                 >
@@ -372,21 +318,7 @@ const Orders = () => {
               className="admin-button-secondary"
             >
               Next
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="2"
-                stroke="currentColor"
-                aria-hidden="true"
-                className="w-4 h-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                ></path>
-              </svg>
+              <ArrowRight className="h-4 w-4" />
             </button>
           </div>
           </div>

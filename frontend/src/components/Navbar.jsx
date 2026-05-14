@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Heart, Menu, ShoppingBag, UserRound, X } from "lucide-react";
+import { Heart, Menu, PawPrint, ShoppingBag, UserRound, X } from "lucide-react";
 import { logout } from "@/services/reducer/authSlice";
 import CartMenu from "./CartMenu.jsx";
 
@@ -61,9 +61,11 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 border-b border-amber-100/80 bg-[#fffaf2]/95 backdrop-blur">
       <nav className="pet-container flex h-20 items-center justify-between gap-4" aria-label="Global">
         <Link to="/" className="flex items-center gap-3" aria-label="Petopia home">
-          <img src="/logoo.png" alt="Petopia" className="h-12 w-auto" />
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-900/20">
+            <PawPrint className="h-6 w-6" />
+          </span>
           <div className="hidden sm:block">
-            <p className="text-sm font-extrabold tracking-tight text-slate-950">Petopia</p>
+            <p className="text-lg font-black tracking-tight text-slate-950">Petopia</p>
             <p className="text-xs font-medium text-slate-500">Premium pet care</p>
           </div>
         </Link>

@@ -1,5 +1,6 @@
-// import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { ArrowRight, CalendarDays, MapPin, PawPrint } from "lucide-react";
 
 const PetCards = ({
   id,
@@ -9,59 +10,74 @@ const PetCards = ({
   name,
   age,
   location,
+  availability,
+  category,
 }) => {
-  // Extract day and month from the date string
-  
+  const isDimmed = isHovered && isHovered !== id;
 
   return (
-    <Link
-      to={`/pets/${id}`}
-      className="w-[248px]"
-      onMouseOver={() => setIsHovered(id)}
-      onMouseLeave={() => setIsHovered(null)}
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: isDimmed ? 0.62 : 1, y: 0 }}
+      transition={{ duration: 0.28, ease: "easeOut" }}
+      className="h-full"
     >
-      <div
-        className={`group ${
-          isHovered
-            ? isHovered === id
-              ? "hover:saturate-100"
-              : "saturate-0"
-            : "saturate-100"
-        }  duration-300 transition-[filter] relative w-[248px] h-[260px] bg-[#ffede2] font-['Robot_Flex'] border-b-2 border-b-primary
-      `}
+      <Link
+        to={`/pets/${id}`}
+        className="group block h-full overflow-hidden rounded-[1.75rem] border border-amber-100 bg-white shadow-sm shadow-amber-950/5 transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-950/12 focus:outline-none focus:ring-4 focus:ring-amber-100"
+        onMouseOver={() => setIsHovered(id)}
+        onMouseLeave={() => setIsHovered(null)}
       >
-        <img
-          className="group-hover:rounded-br-[100px] rounded-br-[0px] transition-[border-radius] duration-300"
-          src={image || "/product-placeholder.svg"}
-          alt={name || "Pet"}
-          onError={(event) => {
-            event.currentTarget.src = "/product-placeholder.svg";
-          }}
-          style={{ aspectRatio: "400/300", objectFit: "cover" }}
-        />
-        <div className=" absolute top-0 right-0 bg-primary px-4 py-2 text-white text-sm transition duration-500 ease-in-out">
-          <span>{location}</span>
-        </div>
-        <p className="m-[5px] text-[#262626] font-primary text-lg">{name}</p>
-        <p className="m-[5px] text-[#777674] text-sm font-primary">
-          {age} {age < 2 ? "year" : "years"} old
-        </p>
-        {/* <!-- SVG of Arrow --> */}
-        <svg
-          className="group-hover:opacity-100 opacity-0 transition-opacity absolute right-[10px] bottom-[10px]"
-          xmlns="http://www.w3.org/2000/svg"
-          width="45"
-          height="64"
-          viewBox="0 0 45 64"
-          fill="none"
-        >
-          <path
-            d="M5.67927 0.685928C5.66838 0.658706 5.65749 0.636925 5.65749 0.636925L3.81168 1.12696C5.55403 11.7281 0.588324 15.4905 0.375974 15.6484L1.49217 17.2056C1.69363 17.0641 5.49414 14.2654 6.03318 7.14353C9.0333 14.2545 13.0244 20.1731 17.1298 24.774C17.059 24.8774 16.9882 24.9754 16.9229 25.0789C14.3311 29.0645 14.0861 34.651 16.1933 41.6912C18.6271 49.8203 24.5239 57.748 32.3754 63.4434L33.5025 61.8916C25.9886 56.4358 20.3477 48.8729 18.0336 41.1358C16.1388 34.8089 16.2913 29.6526 18.4692 26.2114C21.7035 29.5927 24.9432 32.1518 27.7636 33.8288C33.8945 37.4659 38.2232 36.377 40.2541 35.4078C42.4919 34.3406 44.1254 32.375 44.414 30.4094C44.4575 30.1099 44.4793 29.805 44.4793 29.5001C44.4793 27.5509 43.5864 25.5853 41.9039 23.8756C38.4628 20.3691 32.713 18.7465 26.5276 19.5306C23.1518 19.9607 20.3695 21.2457 18.3603 23.2821C14.4455 18.8554 10.645 13.1655 7.77554 6.34314C9.95348 8.22706 13.2476 10.2199 18.1425 11.5266L18.638 9.67539C9.24565 7.16531 6.28364 1.94369 5.75005 0.838382C5.73371 0.783935 5.71193 0.729488 5.6956 0.669594L5.67382 0.669594L5.67927 0.685928ZM26.7672 21.4308C33.3555 20.5923 38.2014 22.8411 40.5372 25.215C42.0509 26.7559 42.7533 28.5037 42.5192 30.1317C42.3558 31.2425 41.3431 32.767 39.4319 33.6763C37.744 34.4822 34.1069 35.3642 28.7437 32.179C25.9886 30.5455 22.8197 28.03 19.6617 24.6923C21.7797 22.5035 24.6056 21.6976 26.7726 21.4254L26.7672 21.4308Z"
-            fill="#F04E29"
+        <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50">
+          <img
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+            src={image || "/product-placeholder.svg"}
+            alt={name || "Pet"}
+            onError={(event) => {
+              event.currentTarget.src = "/product-placeholder.svg";
+            }}
           />
-        </svg>
-      </div>
-    </Link>
+          <div className="absolute left-3 top-3 flex gap-2">
+            <span className="pet-badge bg-white/90 text-slate-800 shadow-sm backdrop-blur">
+              <PawPrint className="mr-1 h-3.5 w-3.5 text-amber-600" />
+              {category || "Pet"}
+            </span>
+          </div>
+          <span
+            className={`absolute right-3 top-3 pet-badge shadow-sm backdrop-blur ${
+              availability
+                ? "bg-emerald-50/95 text-emerald-700"
+                : "bg-slate-100/95 text-slate-600"
+            }`}
+          >
+            {availability ? "Available" : "Reserved"}
+          </span>
+        </div>
+
+        <div className="p-5">
+          <h3 className="line-clamp-1 text-xl font-black tracking-tight text-slate-950">
+            {name || "Pet"}
+          </h3>
+          <div className="mt-3 grid gap-2 text-sm font-semibold text-slate-500">
+            <span className="inline-flex items-center gap-2">
+              <CalendarDays className="h-4 w-4 text-amber-600" />
+              {age} {Number(age) === 1 ? "year" : "years"} old
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-amber-600" />
+              {location || "Location unavailable"}
+            </span>
+          </div>
+          <div className="mt-5 flex items-center justify-between">
+            <span className="text-sm font-black text-amber-700">Meet pet</span>
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-950 text-white transition duration-300 group-hover:translate-x-1 group-hover:bg-amber-600">
+              <ArrowRight className="h-4 w-4" />
+            </span>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
   );
 };
 

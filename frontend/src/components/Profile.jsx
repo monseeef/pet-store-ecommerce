@@ -99,7 +99,7 @@ export default function ProfilePage() {
                 </Avatar>
                 <div>
                   <h2 className="text-2xl font-black text-slate-950">
-                    {user?.username || "Pet Store Customer"}
+                    {user?.username || "Petopia Customer"}
                   </h2>
                   <p className="text-sm font-semibold text-slate-500">
                     {user?.email || "Signed-in customer"}
