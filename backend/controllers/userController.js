@@ -13,6 +13,12 @@ const sanitizeUser = (user) => {
   return userObject;
 };
 
+const getAuthCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+});
+
 // Controller function for user registration
 exports.register = async (req, res) => {
   try {
@@ -56,11 +62,8 @@ exports.login = async (req, res) => {
       expiresIn: 60 * 60 * 8,
     });
 
-    const tokenOption = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    };
+    // Cross-site production cookies are required for Vercel frontend -> Render API auth.
+    const tokenOption = getAuthCookieOptions();
     // Setting token in cookie and sending success response
     res.cookie("token", token, tokenOption).status(200).json({
       message: "Login successfully",
@@ -136,7 +139,7 @@ exports.passwordReset = async (req, res, next) => {
 exports.logout = (req, res) => {
   try {
     // Clearing token cookie and sending success response
-    res.clearCookie("token");
+    res.clearCookie("token", getAuthCookieOptions());
     res.status(200).json({
       message: "Logged out Successfully",
       error: false,

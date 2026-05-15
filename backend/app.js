@@ -8,23 +8,45 @@ const apiRoutes = require('./routes/api'); // Import
 
 const cors = require("cors");
 
-app.use(
+const splitOrigins = (value) =>
+  String(value || "")
+    .split(",")
+    .map((origin) => origin.trim().replace(/\/$/, ""))
+    .filter(Boolean);
 
-  cors({
+const allowedOrigins = new Set([
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+  "http://localhost:5176",
+  "https://petopia-store.vercel.app",
+  "https://petopia-store-admin.vercel.app",
+  process.env.CLIENT_URL,
+  process.env.ADMIN_URL,
+  process.env.ADMIN_VERCEL_URL,
+  process.env.VERCEL_ADMIN_URL,
+  ...splitOrigins(process.env.EXTRA_ALLOWED_ORIGINS),
+]
+  .filter(Boolean)
+  .map((origin) => origin.replace(/\/$/, "")));
 
-    origin: ["http://localhost:5173","http://localhost:5175","http://localhost:5174", "https://api.cloudinary.com"],
+const corsOptions = {
+  origin(origin, callback) {
+    // Non-browser requests such as Postman, health checks, and same-origin server calls do not send Origin.
+    if (!origin) {
+      return callback(null, true);
+    }
 
-    credentials: true,
+    return callback(null, allowedOrigins.has(origin.replace(/\/$/, "")));
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ["GET", "HEAD", "PUT", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-    optionSuccessStatus: 200,
-
-    methods: ["GET", "HEAD", "PUT", "POST", "DELETE"],
-
-    allowedHeaders: ['Content-Type', 'Authorization']
-
-  })
-
-)
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 
 
